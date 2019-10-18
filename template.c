@@ -33,29 +33,56 @@ int main()
 {
 	char command;
 	int exit = FALSE;
-
+    int ret=0;
 	struct Node *myList;
 	struct Node *mySecondList;
+	int keysearch;
 
 	while (!exit)
 	{
 		printf("a: Static Build\n");
+		printf("d: Dynamic Build\n");
+		printf("n: Dynamic Build Mod\n");
+		printf("f: Find\n");
+		printf("s: Sum\n");
+		printf("m: Minimum\n");
+		printf("r: Reverse Print\n");
 		printf("x: Exit\n");
 		printf("Enter command: ");
 		scanf("%c", &command);
 		fflush(stdin);
-
+        struct Node* generalhead;
 		switch (command)
 		{
 		case 'a':
 			StaticBuild1234();
 			break;
         case 'd':
-			DynamicBuild1234();
+		printf("d: Dynamic Build\n");
+			generalhead = DynamicBuild1234();
+			break;
+        case 'n':
+            generalhead = DynamicBuild1234_Modified();
+            break;
+        case 'f':
+            printf("Which key to search?: ");
+            scanf("%d",&keysearch);
+			ret = SearchItem(generalhead,keysearch);
+			printf(ret ? "Key found\n" : "Key not found\n");
+			break;
+        case 'm':
+            printf("Min value is: %d\n",MinValue(generalhead));
+			break;
+        case 's':
+            printf("The sum is: %d\n",SumList(generalhead));
+			break;
+        case 'r':
+            ReversePrintList(generalhead);
 			break;
 		case 'x':
 			exit = TRUE;
 			break;
+
 
 		default:
 			printf("Command is not recognized!\n");
@@ -68,8 +95,7 @@ int main()
 	return 0;
 }
 
-/*A function that builds a linked list containing four elements by using static
-memory allocation*/
+
 void StaticBuild1234(void)
 {
 	struct Node node1, node2, node3, node4, node5;
@@ -92,7 +118,6 @@ void StaticBuild1234(void)
 	PrintList(head);
 }
 
-/*A function that traverses a linked list and prints the values*/
 void PrintList(struct Node *p){
  	int key = 0;
 
@@ -102,8 +127,7 @@ void PrintList(struct Node *p){
  	}
 }
 
-/*A function that builds a linked list containing four elements by using
-dynamic memory allocation*/
+
 struct Node* DynamicBuild1234(void){
     struct Node *head = (struct Node *)malloc(sizeof(struct Node));
     struct Node *node1 = (struct Node *)malloc(sizeof(struct Node));
@@ -112,45 +136,76 @@ struct Node* DynamicBuild1234(void){
     struct Node *node4 = (struct Node *)malloc(sizeof(struct Node));
 
     head = node1;
-
     node1->val = 4;
     node1->next = node2;
-
     node2->val = 5;
     node2->next = node3;
-
     node3->val = 7;
     node3->next = node4;
-
     node4->val = 6;
     node4->next = NULL;
 
     PrintList(head);
+    return head;
 }
 
-/*A function that builds a linked list without an assumption related to the
-length of the linked list - When the user enters -1 as a value, the linked list
-should finish.*/
+
 struct Node* DynamicBuild1234_Modified(void){
- 	//TO BE COMPLETED
+ 	struct Node *head = (struct Node*)malloc(sizeof(struct Node*));
+ 	struct Node *curr = head;
+
+ 	int temp = 0;
+ 	while(temp != -1){
+        scanf("%d",&temp);
+        if(temp!=-1){
+            curr->val = temp;
+            curr->next = (struct Node*)malloc(sizeof(struct Node*));
+            curr = curr->next;
+        } else {
+            curr->next = NULL;
+
+        }
+ 	}
+ 	PrintList(head);
+ 	return head;
 }
 
 /*A function that searches a value in a linked list*/
-int SearchItem(struct Node *p, int key)
-{
- 	//TO BE COMPLETED
+int SearchItem(struct Node *p, int key){
+ 	while(p!= NULL){
+        printf("%d\n",p->val);
+        if(key == p->val){
+            return 1;
+        }
+        p = p->next;
+ 	}
+ 	return 0;
 }
 
 /*A function that traverses a linked list and returns the minimum value*/
 int MinValue(struct Node *p)
 {
- 	//TO BE COMPLETED
+ 	int min=9999;
+ 	while(p!= NULL){
+        printf("%d\n",p->val);
+        if(p->val < min){
+            min = p->val;
+        }
+        p = p->next;
+ 	}
+ 	return min;
 }
 
 /*A function that traverses a linked list and returns the sum of the values*/
 int SumList(struct Node *p)
 {
- 	//TO BE COMPLETED
+ 	int sum=0;
+ 	while(p!= NULL){
+        printf("%d\n",p->val);
+        sum = sum + p->val;
+        p = p->next;
+ 	}
+ 	return sum;
 }
 
 /*A function that prints the elements of a given linked list by using recursion*/
@@ -163,7 +218,10 @@ void RecursivePrintList(struct Node *p)
 using recursion*/
 void ReversePrintList(struct Node *p)
 {
- 	//TO BE COMPLETED
+    if(p != NULL){
+        ReversePrintList(p->next);
+        printf("%d\n",p->val);
+    }
 }
 
 /*A function that takes a linked list and makes a copy of it - This function
