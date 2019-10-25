@@ -22,15 +22,23 @@ typedef struct ListRecord *List;
 List CreateList(void);
 void MakeEmptyList(List);
 int ListSize(List);
+void InsertList(List l,int pos,int val);
 int HeadOfList(List);
 int TailOfList(List);
+int GetPositionOfElement(List l, int val);
+int GetElementAtPosition(List l, int pos);
 int IsEmptyList(List);
 void DisplayList(List);
+void DeleteList(List l, int val);
+int SortedInsert(List l, struct Node *node);
+void InsertSort(List l);
+
+
 
 int main()
 {
 	List myList;
-	int exit, val, pos;
+	int exit, val, pos,vall;
 	char command;
 
 	myList = CreateList();
@@ -47,6 +55,8 @@ int main()
 		printf("(h)ead of list\n");
 		printf("(t)ail of list\n");
 		printf("(e)xit\n");
+		printf("(s)orted insert\n");
+		printf("(u) InsertSort\n");
 		printf("Enter command: ");
 		scanf("%c", &command);
 		fflush(stdin);
@@ -57,10 +67,10 @@ int main()
 			MakeEmptyList(myList);
 			break;
 		case 'n':
+		    printf("enter position: ");
+			scanf("%d", &pos);
 			printf("enter value: ");
 			scanf("%d", &val);
-			printf("enter position: ");
-			scanf("%d", &pos);
 			InsertList(myList, pos, val);
 			DisplayList(myList);
 			break;
@@ -69,25 +79,31 @@ int main()
 			scanf("%d", &val);
 			DeleteList(myList, val);
 			break;
-//		case 'p':
-//			printf("enter value: ");
-//			scanf("%d", &val);
-//			//pos = GetPositionOfElement(myList, val);
-//			if (pos > 0)
-//				printf("element %d at position %d\n", val, pos);
-//			break;
-//		case 'f':
-//			printf("enter position: ");
-//			scanf("%d", &pos);
-//			//val = GetElementAtPosition(myList, pos);
-//			if (val >= 0)
-//				printf("element at position %d is %d\n", pos, val);
-//			break;
-//		case 'h':
-//			val = HeadOfList(myList);
-//			if (val != -1)
-//				printf("front element is %d\n", val);
-//			break;
+		case 'p':
+			printf("enter value: ");
+			scanf("%d", &val);
+			pos = GetPositionOfElement(myList, val);
+			if (pos > 0)
+				printf("element %d at position %d\n", val, pos);
+			break;
+		case 'f':
+			printf("enter position: ");
+			scanf("%d", &pos);
+			val = GetElementAtPosition(myList, pos);
+			if (val >= 0)
+				printf("element at position %d is %d\n", pos, val);
+			break;
+        case 's':
+                printf("enter value: ");
+                scanf("%d",&vall);
+                struct Node *node = (struct Node*)malloc(sizeof(struct Node));
+                node->val = vall;
+                SortedInsert(myList,node);
+                break;
+
+		case 'u':
+			InsertSort(myList);
+			break;
 //		case 't':
 //			val = TailOfList(myList);
 //			if (val != -1)
@@ -196,15 +212,84 @@ void InsertList(List l,int pos,int val){
     p->next = new_node;
     (l->size)++;
 
+
 }
 
-void DeleteList(myList, int val){
+void DeleteList(List l, int val){
+    struct Node *p, *p_prev;
+
+    p = l->head;
+
+    while(p!=NULL && val != p->val){
+        p_prev = p;
+        p = p->next;
+    }
+
+    if(p!=NULL){
+        p_prev->next = p->next;
+        free(p);
+
+    }
+}
+
+
+int GetPositionOfElement(List l, int pos){
+    int cnt=0;
     struct Node *p;
     p = l->head;
 
-    while(p->next!=NULL){
-        if(p->val == val){
+    while( p!=NULL && cnt!=pos){
+        cnt = cnt+1;
+        p = p->next;
 
-        }
     }
+    return cnt;
+
+}
+
+int GetElementAtPosition(List l, int pos){
+    int cnt = -1;
+    struct Node *p;
+    p = l->head;
+
+    while( p!=NULL && cnt!=pos){
+        cnt = cnt+1;
+        p = p->next;
+
+    }
+    return p->val;
+
+
+}
+
+
+int SortedInsert(List l, struct Node *new_node){
+    int cnt=0;
+    struct Node *p,*p_prev;
+    p = l->head->next;
+    int value = new_node->val;
+    while(p!=NULL && p->val < new_node->val){
+        p_prev = p;
+        p = p->next;
+    }
+    p_prev->next = new_node;
+    new_node->next = p;
+
+    (l->size)++;
+}
+
+
+void InsertSort(List l){
+    struct Node *p;
+
+	p = l->head->next;
+	printf("List content:\n");
+
+	while (p!= NULL){
+
+		SortedInsert(l, p);
+		printf("here");
+		p = p->next;
+	}
+
 }
