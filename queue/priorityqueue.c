@@ -42,23 +42,24 @@ void enq(struct Queue* q) {
 	struct Node* p = q->front;
 	
 	int count = 0;
+	if(q->front == NULL){
+		q->front = temp;
+		q->rear = q->front;
+		return;
+	}else{
+		printf("Not empty\n");
+	}
 	
-    while(p!=NULL){
-    	printf("yes");
-    	if(temp->priority < p->priority){
-    		holder = p->next;
-    		p->next = temp;
-    		temp->next = holder;
-    		return;
-		}
-		
-		if(count==q->size){
-			q->rear = temp;
-		}
-		count++;
+    
+    while(p->next!=NULL && temp->priority < p->next->priority){
     	p = p->next;
 	}
 	
+	holder = p->next;
+	temp->next = holder;
+	p->next = temp;
+    return;
+    
   	p = temp;
   	q->front = p;
   	q->rear = q->front;
@@ -78,6 +79,20 @@ struct QNode* deq(struct Queue* q){
     return temp;
 } 
 
+void displayQueue(struct Queue* q){
+	struct Node *p;
+
+	p = q->front;
+	printf("List content:\n");
+
+	while (p != NULL)
+	{
+		printf("--> %d\t", p->val);
+		p = p->next;
+	}
+	printf("\n");
+}
+
 
 void main(){
 	struct Queue* qHead;
@@ -88,10 +103,9 @@ void main(){
 	enq(qHead);
 	enq(qHead);
 	
+	displayQueue(qHead);
+	/*deq(qHead);
 	deq(qHead);
 	deq(qHead);
-	deq(qHead);
-	deq(qHead);
-	
+	deq(qHead);*/
 }
-
