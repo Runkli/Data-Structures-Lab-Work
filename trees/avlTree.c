@@ -220,6 +220,7 @@ struct node* avlinsert(struct node * node, int x){
 		node = malloc(sizeof(struct node));
 		node->val = x;
 		node->left = node->right = NULL;
+		return node;
 	}
 
 	else if(x<node->val){
@@ -232,6 +233,8 @@ struct node* avlinsert(struct node * node, int x){
 		printf("larger than curr node\n");
 		node->right = insertbst(node->right,x);
 
+	}else{
+        return node;
 	}
 
     int balance = getBalance(node);
@@ -256,10 +259,7 @@ struct node* avlinsert(struct node * node, int x){
     return node;
 }
 
-void balance(struct node* node){
 
-
-}
 
 
 void main(){
@@ -269,18 +269,17 @@ void main(){
 
     printf("root: ");
     scanf("%d",&root->val);
-    int x;
-	scanf("%d",&x);
-    insertbst(root,x);
-	scanf("%d",&x);
-    insertbst(root,x);
-	scanf("%d",&x);
-    insertbst(root,x);
+    int x=0;
+
+    while(x!=-1){
+        scanf("%d",&x);
+        root = insert(root,x);
+
+    }
 
 	structure(root,0);
 
-    abs(getBalance(root)) < 1 ? printf("\nBalanced") : printf("\nNot Balanced");
-
+    abs(getBalance(root)) <= 1 ? printf("\nBalanced") : printf("\nNot Balanced");
 
 
 
